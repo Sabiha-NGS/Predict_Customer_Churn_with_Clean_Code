@@ -2,7 +2,7 @@
 """
 Supporting Functions for Predicting customer Churn notebook
 Developed by: Shaik Sabiha
-Version 1 Date: 12-09-2023
+Version 1 Date: 21-08-2022
 """
 
 # import libraries
@@ -40,17 +40,17 @@ def import_clean_data(pth):
     '''
     # read the file contents into the dataframe
     data_frame = pd.read_csv(pth)
-    #print("---- Data is imported ----\n")
+    print("---- Data is imported ----\n")
 
     # Add the feature Churn
     data_frame['Churn'] = data_frame['Attrition_Flag'].apply(
         lambda val: 0 if val == "Existing Customer" else 1)
-    #print("---- New Feature Churn is added ----\n")
+    print("---- New Feature Churn is added ----\n")
 
     # drop irrelevant features
     data_frame.drop(['Unnamed: 0', 'Attrition_Flag', 'CLIENTNUM'], axis=1,
                     inplace=True)
-    #print("---- Irrelevant columns are dropped ----\n")
+    print("---- Irrelevant columns are dropped ----\n")
 
     # QC of the data
     folder_name = 'Data_QC'
@@ -61,7 +61,7 @@ def import_clean_data(pth):
     else:
         # print(f"'{folder_name}' already exists.")
         pass
-    #print("---- Performing QC ----\n")
+    print("---- Performing QC ----\n")
 
     # Check the nulls in the dataframe
     null_counts = data_frame.isnull().sum()
@@ -70,8 +70,8 @@ def import_clean_data(pth):
     # Convert the columns_with_nulls Series to a DataFrame
     columns_with_nulls_data_frame = columns_with_nulls.reset_index()
     columns_with_nulls_data_frame.columns = ['Column Name', 'Null Count']
-    #print(f"1. {columns_with_nulls_data_frame.shape[0]} Columns have nulls")
-    #print("2. Details on Nulls is exported to the Data_QC/columns_with_nulls.csv")
+    print(f"1. {columns_with_nulls_data_frame.shape[0]} Columns have nulls")
+    print("2. Details on Nulls is exported to the Data_QC/columns_with_nulls.csv")
 
     # Export to CSV
     columns_with_nulls_data_frame.to_csv('Data_QC/columns_with_nulls.csv',
@@ -79,7 +79,7 @@ def import_clean_data(pth):
 
     # export the descriptive statistics to a file
     data_frame.describe().to_csv('Data_QC/Data_stats.csv', index=False)
-    #print("3. Descriptive statistics is exported to the Data_QC/Data_stats.csv")
+    print("3. Descriptive statistics is exported to the Data_QC/Data_stats.csv")
 
     # Convert the dtypes Series to a DataFrame
     dtypes_data_frame = data_frame.dtypes.reset_index()
@@ -87,9 +87,9 @@ def import_clean_data(pth):
     # Export to CSV with index name and column names
     dtypes_data_frame.to_csv('Data_QC/Data_dtypes.csv', index=False)
     dtypes_data_frame.columns = ['Column Name', 'Data Type']
-    #print("4. Column datatype info is exported to the Data_QC/Data_dtypes.csv\n")
+    print("4. Column datatype info is exported to the Data_QC/Data_dtypes.csv\n")
 
-    #print("---- QC Done ----\n")
+    print("---- QC Done ----\n")
 
 
     # return the dataframe
@@ -117,7 +117,7 @@ def plot_histogram(data_frame, column, folder_name):
     plt.legend()
     plt.savefig(f'{folder_name}/histogram_of_{column}.jpeg',
                 format='jpeg', dpi=300)
-    #plt.show()
+    plt.show()
     plt.close()
 
 
@@ -142,7 +142,7 @@ def plot_barplot(data_frame, column, folder_name):
     plt.legend()
     plt.savefig(f'{folder_name}/histogram_of_{column}.jpeg',
                 format='jpeg', dpi=300)
-    #plt.show()
+    plt.show()
     plt.close()
 
 
@@ -166,7 +166,7 @@ def plot_density(data_frame, column, folder_name):
     plt.ylabel('Frequency')
     plt.savefig(f'{folder_name}/Density plot of {column}.jpeg',
                 format='jpeg', dpi=300)
-    #plt.show()
+    plt.show()
     plt.close()
 
 
@@ -194,7 +194,7 @@ def plot_correlation(data_frame, folder_name):
     plt.ylabel('Numeric Columns')
     plt.savefig(f'{folder_name}/Correlation Heatmap.jpeg',
                 format='jpeg', dpi=300)
-    #plt.show()
+    plt.show()
     plt.close()
 
 
@@ -218,7 +218,7 @@ def perform_eda(data_frame):
         # print(f"'{folder_name}' already exists.")
         pass
 
-    #print("---- Performing EDA ----\n")
+    print("---- Performing EDA ----\n")
 
     # numerical columns list
     num_columns = data_frame.select_dtypes(exclude='object').columns.tolist()
@@ -240,7 +240,7 @@ def perform_eda(data_frame):
     # Correlation plot
     plot_correlation(data_frame, folder_name)
 
-    #print("---- All images are exported to images/eda folder ----\n")
+    print("---- All images are exported to images/eda folder ----\n")
 
 
 def encoder_helper(data_frame, category_lst, target_col):
@@ -292,7 +292,7 @@ def perform_feature_engineering(data_frame, target_col):
 
     # encode the categorical columns
     data_frame_encoded = encoder_helper(data_frame, category_lst, target_col)
-    #print("---- Categorical columns are Encoded ----\n")
+    print("---- Categorical columns are Encoded ----\n")
 
     # Alternative approach
     # convert categorical features to dummy variable
@@ -307,7 +307,7 @@ def perform_feature_engineering(data_frame, target_col):
     # train test split
     x_train, x_test, y_train, y_test = train_test_split(x_df, y_df, test_size=0.3,
                                                         random_state=42)
-    #print("---- Dataset is split into train and test ----\n")
+    print("---- Dataset is split into train and test ----\n")
     return x_train, x_test, y_train, y_test
 
 def plot_classification_report(model_name,
@@ -377,7 +377,7 @@ def plot_classification_report(model_name,
         dpi=300)
 
     # Display figure
-    #plt.show()
+    plt.show()
     plt.close()
 
 
@@ -461,7 +461,7 @@ def feature_importance_plot(model, x_data, model_name, output_pth):
                 bbox_inches='tight', dpi=300)
 
     # display feature importance figure
-    #plt.show()
+    plt.show()
     plt.close()
 
 
@@ -497,7 +497,7 @@ def confusion_matrix(model, model_name, x_test, y_test):
             "images/results",
             f'{model_name}_Confusion_Matrix'),
         bbox_inches='tight', dpi=300)
-    #plt.show()
+    plt.show()
     plt.close()
 
 
@@ -544,11 +544,11 @@ def train_models(x_train, x_test, y_train, y_test):
 
     # Train Ramdom Forest using GridSearch
     cv_rfc.fit(x_train, y_train)
-    #print("---- Trained RandomForest Model ----\n")
+    print("---- Trained RandomForest Model ----\n")
 
     # Train Logistic Regression
     lrc.fit(x_train, y_train)
-    #print("---- Trained Logistic Regression Model ----\n")
+    print("---- Trained Logistic Regression Model ----\n")
 
     # get predictions
     y_train_preds_rf = cv_rfc.best_estimator_.predict(x_train)
@@ -564,7 +564,7 @@ def train_models(x_train, x_test, y_train, y_test):
                                 y_train_preds_rf,
                                 y_test_preds_lr,
                                 y_test_preds_rf)
-    #print("----Classification reports exported to images/results folder----\n")
+    print("----Classification reports exported to images/results folder----\n")
 
     # plot ROC-curves
     plt.figure(figsize=(15, 8))
@@ -585,14 +585,14 @@ def train_models(x_train, x_test, y_train, y_test):
             "images/results",
             'ROC_curves.png'),
         bbox_inches='tight', dpi=300)
-    #plt.show()
+    plt.show()
     plt.close()
-    #print("----ROC reports exported to images/results folder----\n")
+    print("----ROC reports exported to images/results folder----\n")
 
     # save best model
     joblib.dump(cv_rfc.best_estimator_, 'models/rfc_model.pkl')
     joblib.dump(lrc, 'models/logistic_model.pkl')
-    #print("----Pickled best models saved to models folder----\n")
+    print("----Pickled best models saved to models folder----\n")
 
     for model, model_type in zip([cv_rfc.best_estimator_, lrc],
                                  ['Random_Forest', 'Logistic_Regression']
@@ -600,14 +600,14 @@ def train_models(x_train, x_test, y_train, y_test):
         # Display confusion matrix on test data
         confusion_matrix(model, model_type, x_test, y_test)
 
-    #print("----Confusion matrix exported to images/results folder----\n")
+    print("----Confusion matrix exported to images/results folder----\n")
 
     # Display feature importance on train data
     feature_importance_plot(cv_rfc.best_estimator_,
                             x_train,
                             'Random_Forest',
                             "images/results")
-    #print("----Feature importance results exported to images/results folder----\n")
+    print("----Feature importance results exported to images/results folder----\n")
 
 
 if __name__ == "__main__":
